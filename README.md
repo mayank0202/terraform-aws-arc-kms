@@ -2,7 +2,6 @@
 
 ## Usage
 
-## Usage
 1. Initialize the modules:
   ```shell
   terraform init
