@@ -1,5 +1,36 @@
 # terraform-aws-arc-kms
 
+## Usage
+
+## Usage
+1. Initialize the modules:
+  ```shell
+  terraform init
+  ```
+
+2. Plan Terraform
+  ```shell
+  terraform plan
+  ```
+3. Apply Terraform
+  ```shell
+  terraform apply
+  ```
+
+```hcl
+
+module "kms" {
+  source                  = "../" # Use the local path to your kms-module directory
+  enabled                 = var.enabled
+  deletion_window_in_days = var.deletion_window_in_days
+  enable_key_rotation     = var.enable_key_rotation
+  alias                   = var.alias
+  tags                    = module.tags.tags
+  policy                  = var.policy
+}
+
+```
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
