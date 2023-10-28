@@ -86,3 +86,5 @@ module "kms" {
 | <a name="output_key_arn"></a> [key\_arn](#output\_key\_arn) | Key ARN |
 | <a name="output_key_id"></a> [key\_id](#output\_key\_id) | Key ID |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+Developed by Mayank
