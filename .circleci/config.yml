@@ -1,0 +1,31 @@
+version: 2.1
+
+orbs:
+  terraform: circleci/terraform@3.2.1
+
+jobs:
+  terraform-apply:
+    executor: ubuntu-latest
+    steps:
+      - checkout
+      - terraform/install:
+          version: 1.2.0
+      - terraform/init:
+          backend: s3
+          backend-config:
+            bucket: resume-mayank
+            key: terraform.tfstate
+      - terraform/apply:
+          auto-approve: false
+        environment:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+workflows:
+  build-and-deploy:
+    jobs:
+      - terraform-apply:
+          filters:
+            branches:
+              only:
+                - main
