@@ -1,3 +1,5 @@
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/mayank0202/terraform-aws-arc-kms/tree/main.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/mayank0202/terraform-aws-arc-kms/tree/main)
+
 # terraform-aws-arc-kms
 
 ## Usage
