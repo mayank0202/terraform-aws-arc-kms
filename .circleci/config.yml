@@ -1,43 +1,70 @@
-version: 2.1
-
-orbs:
-  terraform: "circleci/terraform@1.1.0"
-
+version: 2
 jobs:
-  plan_job:
-    executor: terraform/default
+  plan:
+    docker:
+      - image: hashicorp/terraform:latest
+    working_directory: /example
     steps:
       - checkout
       - run:
-          name: Configure AWS CLI and S3 Backend
-          command: |
-            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-            terraform init -backend-config="bucket=$TF_BUCKET" -backend-config="key=$TF_STATE_KEY" -backend-config="region=$TF_REGION"
+          name: Init
+          command: terraform init -input=false
       - run:
-          name: Plan Infrastructure
-          command: terraform plan 
+          name: Plan
+          command: terraform plan -input=false -out=tfplan -no-color
+      - run:
+          name: Render plan for PR comment
+          command: terraform show -no-color tfplan > tfplan.txt
+      - persist_to_workspace:
+          root: /example
+          paths:
+            - ./example
 
-  apply_job:
-    executor: terraform/default
+  apply:
+    docker:
+      - image: hashicorp/terraform:latest
+    working_directory: /code
+    steps:
+      - attach_workspace:
+          at: /example
+      - run:
+          name: Apply
+          command: terraform apply tfplan
+
+  plan_comment:
+    docker:
+      - image: cloudposse/github-commenter:latest
+    working_directory: /code
     steps:
       - checkout
+      - attach_workspace:
+          at: /example
       - run:
-          name: Configure AWS CLI and S3 Backend
-          command: |
-            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-            terraform init -backend-config="bucket=$TF_BUCKET" -backend-config="key=$TF_STATE_KEY" -backend-config="region=$TF_REGION"
-      - run:
-          name: Apply Infrastructure
-          command: terraform apply 
-
+          name: Post plan to PR comment
+          command: |-
+            export CIRCLE_PR_NUMBER=${CIRCLE_PR_NUMBER:-${CIRCLE_PULL_REQUEST##*/}}
+            if [ -z $CIRCLE_PR_NUMBER ]; then echo "Not a pull request - aborting"; exit 0; fi
+            cat /code/tfplan.txt | github-commenter \
+              -owner ${CIRCLE_PROJECT_USERNAME} \
+              -repo ${CIRCLE_PROJECT_REPONAME} \
+              -number $CIRCLE_PR_NUMBER \
+              -delete-comment-regex "Output from" \
+              -type pr \
+              -template_file /code/.circleci/plan-comment.tpl
 workflows:
   version: 2
-  deploy_infrastructure:
+  plan_pr:
     jobs:
-      - terraform/fmt:
-          path: .
-          context: terraform
-      - plan_job:
-      - apply_job:
+      - plan
+      - plan_comment:
+          requires:
+            - plan
+          filters:
+            branches:
+              ignore: main
+      - apply:
+          requires:
+            - plan
+          filters:
+            branches:
+              only: main
