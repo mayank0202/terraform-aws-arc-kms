@@ -1,32 +1,52 @@
 version: 2.1
+
 orbs:
   terraform: "circleci/terraform@1.1.0"
+
+jobs:
+  plan_job:
+    executor: terraform/default
+    steps:
+      - checkout
+      - run:
+          name: Configure AWS CLI and S3 Backend
+          command: |
+            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            terraform init -backend-config="bucket=$TF_BUCKET" -backend-config="key=$TF_STATE_KEY" -backend-config="region=$TF_REGION"
+      - run:
+          name: Plan Infrastructure
+          command: terraform plan
+
+  apply_job:
+    executor: terraform/default
+    steps:
+      - checkout
+      - run:
+          name: Configure AWS CLI and S3 Backend
+          command: |
+            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            terraform init -backend-config="bucket=$TF_BUCKET" -backend-config="key=$TF_STATE_KEY" -backend-config="region=$TF_REGION"
+      - run:
+          name: Apply Infrastructure
+          command: terraform apply
+
 workflows:
+  version: 2
   deploy_infrastructure:
     jobs:
       - terraform/fmt:
-          checkout: true
+          path: /path/to/your/terraform/code
           context: terraform
       - terraform/validate:
-          checkout: true
+          path: /path/to/your/terraform/code
           context: terraform
           requires:
             - terraform/fmt
-      - terraform/plan:
-          checkout: true
-          context: terraform
-          persist-workspace: true
+      - plan_job:
           requires:
             - terraform/validate
-      - hold-apply:
-          type: approval
+      - apply_job:
           requires:
-            - terraform/plan
-      - terraform/apply:
-          attach-workspace: true
-          context: terraform
-          filters:
-            branches:
-              only: main
-          requires:
-            - hold-apply
+            - terraform/validate
