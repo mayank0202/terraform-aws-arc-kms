@@ -7,15 +7,18 @@ workflows:
       - terraform/fmt:
           checkout: true
           context: terraform
+          working_directory: /example
       - terraform/validate:
           checkout: true
           context: terraform
+          working_directory: /example
           requires:
             - terraform/fmt
       - terraform/plan:
           checkout: true
           context: terraform
           persist-workspace: true
+          working_directory: /example
           requires:
             - terraform/validate
       - hold-apply:
@@ -25,8 +28,9 @@ workflows:
       - terraform/apply:
           attach-workspace: true
           context: terraform
+          working_directory: /example
           filters:
             branches:
-              only: master
+              only: main
           requires:
             - hold-apply
