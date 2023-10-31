@@ -20,10 +20,10 @@ jobs:
   apply:
     docker:
       - image: hashicorp/terraform:latest
-    working_directory: .
+    working_directory: /example
     steps:
       - attach_workspace:
-          at: /code
+          at: /example
       - run:
           name: Apply
           command: terraform apply
