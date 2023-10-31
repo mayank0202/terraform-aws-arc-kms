@@ -26,31 +26,11 @@ jobs:
     working_directory: /example
     steps:
       - attach_workspace:
-          at: /example
+          at: /code
       - run:
           name: Apply
           command: terraform apply
 
-  plan_comment:
-    docker:
-      - image: cloudposse/github-commenter:latest
-    working_directory: /code
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /example
-      - run:
-          name: Post plan to PR comment
-          command: |-
-            export CIRCLE_PR_NUMBER=${CIRCLE_PR_NUMBER:-${CIRCLE_PULL_REQUEST##*/}}
-            if [ -z $CIRCLE_PR_NUMBER ]; then echo "Not a pull request - aborting"; exit 0; fi
-            cat /code/tfplan.txt | github-commenter \
-              -owner ${CIRCLE_PROJECT_USERNAME} \
-              -repo ${CIRCLE_PROJECT_REPONAME} \
-              -number $CIRCLE_PR_NUMBER \
-              -delete-comment-regex "Output from" \
-              -type pr \
-              -template_file /code/.circleci/plan-comment.tpl
 workflows:
   version: 2
   plan_pr:
