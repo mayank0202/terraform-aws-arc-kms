@@ -42,4 +42,4 @@ workflows:
       - plan_job:
       - apply_job:
           requires:
-            - terraform/plan_job
+            - terraform/plan
