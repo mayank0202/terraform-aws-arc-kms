@@ -23,7 +23,7 @@ jobs:
   apply:
     docker:
       - image: hashicorp/terraform:latest
-    working_directory: /code
+    working_directory: /example
     steps:
       - attach_workspace:
           at: /example
@@ -62,9 +62,13 @@ workflows:
           filters:
             branches:
               ignore: main
+      - hold-apply:
+          type: approval
+          requires:
+            - plan        
       - apply:
           requires:
-            - plan
+            - hold-apply
           filters:
             branches:
               only: main
