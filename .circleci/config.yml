@@ -41,5 +41,3 @@ workflows:
           context: terraform
       - plan_job:
       - apply_job:
-          requires:
-            - terraform/plan
