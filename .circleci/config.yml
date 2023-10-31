@@ -16,7 +16,7 @@ jobs:
             terraform init -backend-config="bucket=$TF_BUCKET" -backend-config="key=$TF_STATE_KEY" -backend-config="region=$TF_REGION"
       - run:
           name: Plan Infrastructure
-          command: terraform plan
+          command: terraform plan /example
 
   apply_job:
     executor: terraform/default
@@ -30,17 +30,17 @@ jobs:
             terraform init -backend-config="bucket=$TF_BUCKET" -backend-config="key=$TF_STATE_KEY" -backend-config="region=$TF_REGION"
       - run:
           name: Apply Infrastructure
-          command: terraform apply
+          command: terraform apply /example
 
 workflows:
   version: 2
   deploy_infrastructure:
     jobs:
       - terraform/fmt:
-          path: /path/to/your/terraform/code
+          path: /example
           context: terraform
       - terraform/validate:
-          path: /path/to/your/terraform/code
+          path: /example
           context: terraform
           requires:
             - terraform/fmt
