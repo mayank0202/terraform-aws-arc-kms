@@ -39,14 +39,7 @@ workflows:
       - terraform/fmt:
           path: .
           context: terraform
-      - terraform/validate:
-          path: .
-          context: terraform
-          requires:
-            - terraform/fmt
       - plan_job:
-          requires:
-            - terraform/validate
       - apply_job:
           requires:
-            - terraform/validate
+            - terraform/plan_job
