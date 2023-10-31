@@ -36,12 +36,6 @@ workflows:
   plan_pr:
     jobs:
       - plan
-      - plan_comment:
-          requires:
-            - plan
-          filters:
-            branches:
-              ignore: main
       - hold-apply:
           type: approval
           requires:
