@@ -37,7 +37,7 @@ workflows:
   deploy_infrastructure:
     jobs:
       - terraform/fmt:
-          path: ./terraform-aws-arc-kms/example
+          path: ./terraform-aws-arc-kms/example/main.tf
           context: terraform
       - terraform/validate:
           path: example
