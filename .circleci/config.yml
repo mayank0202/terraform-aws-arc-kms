@@ -33,7 +33,7 @@ set_terraform_environment: &set_terraform_environment
   run:
     name: set terraform environment
     command: |
-      cd && touch $BASH_ENV
+      cd example && touch $BASH_ENV
 
       if [ "${CIRCLE_BRANCH}" == "main" ]; then
         echo 'export TERRAFORM_ENVIRONMENT=production' >> $BASH_ENV
