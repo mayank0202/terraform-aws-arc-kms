@@ -16,14 +16,14 @@ jobs:
           name: Render plan for PR comment
           command: terraform show -no-color tfplan > tfplan.txt
       - persist_to_workspace:
-          root: /example
+          root: .
           paths:
             - ./example
 
   apply:
     docker:
       - image: hashicorp/terraform:latest
-    working_directory: /example
+    working_directory: .
     steps:
       - attach_workspace:
           at: /code
