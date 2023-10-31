@@ -30,14 +30,14 @@ jobs:
             terraform init -backend-config="bucket=$TF_BUCKET" -backend-config="key=$TF_STATE_KEY" -backend-config="region=$TF_REGION"
       - run:
           name: Apply Infrastructure
-          command: terraform apply example
+          command: terraform apply ./terraform-aws-arc-kms/example
 
 workflows:
   version: 2
   deploy_infrastructure:
     jobs:
       - terraform/fmt:
-          path: example
+          path: ./terraform-aws-arc-kms/example
           context: terraform
       - terraform/validate:
           path: example
