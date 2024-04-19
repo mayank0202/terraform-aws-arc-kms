@@ -16,15 +16,39 @@ jobs:
           DEFAULT_BUMP: patch
           REPO_OWNER: mayank0202
     
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v4
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      # - name: Create Release
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      #   with:
+      #     tag_name: ${{ steps.tag.outputs.tag }}
+      #     release_name: v${{ steps.tag.outputs.tag }}
+      #     body: Automated release notes for version ${{ steps.tag.outputs.tag }} 
+      #     draft: false
+      #     prerelease: false
+      - name: "Determine tag"
+        run: "echo \"RELEASE_TAG=${GITHUB_REF#refs/tags/}\" >> $GITHUB_ENV"
+
+      - name: "Create release"
+        uses: "actions/github-script@v6"
         with:
-          tag_name: ${{ steps.tag.outputs.tag }}
-          release_name: v${{ steps.tag.outputs.tag }}
-          body: Automated release notes for version ${{ steps.tag.outputs.tag }} 
-          draft: false
-          prerelease: false
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          script: |
+            try {
+              const response = await github.rest.repos.createRelease({
+                draft: false,
+                generate_release_notes: true,
+                name: process.env.RELEASE_TAG,
+                owner: context.repo.owner,
+                prerelease: false,
+                repo: context.repo.repo,
+                tag_name: process.env.RELEASE_TAG,
+              });
+
+              core.exportVariable('RELEASE_ID', response.data.id);
+              core.exportVariable('RELEASE_UPLOAD_URL', response.data.upload_url);
+            } catch (error) {
+              core.setFailed(error.message);
+            }
 
