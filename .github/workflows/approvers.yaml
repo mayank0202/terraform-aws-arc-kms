@@ -1,22 +1,13 @@
 ---
-name: Test
-
-on:                   # yamllint disable-line rule:truthy
-  push:
-    branches:
-      - "**"          # matches every branch
-      - "!main"       # excludes main
+name: 'Auto Assign'
+on:
   pull_request:
-    branches:
-      - main
+    types: [opened, ready_for_review]
 
 jobs:
-  tflint:
+  add-reviews:
     runs-on: ubuntu-latest
-    name: Approvers
     steps:
-      - name: Add Pull Request Reviewer
-        uses: AveryCameronUofR/add-reviewer-gh-action@1.0.3
-        with: 
-          reviewers: "mayank0202,mayank2299"
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: kentaro-m/auto-assign-action@v2.0.0
+        with:
+          configuration-path: '.github/auto_assign.yml'
