@@ -76,5 +76,5 @@ variable "namespace" {
 variable "environment" {
   type        = string
   description = "Name of the environment resources will belong to."
-  default     = "poc"
+  default     = "dev"
 }
