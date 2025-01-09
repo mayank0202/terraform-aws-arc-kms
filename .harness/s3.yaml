@@ -19,9 +19,11 @@ pipeline:
                   identifier: Email_1
                   spec:
                     to: mayankat2299@gmail.com
-                    cc: mayank2299@gmail.com
-                    subject: Hello harness
-                    body: Hii from harness ci-cd
+                    cc: ""
+                    subject: Hello Astha! Stay Alert!
+                    body: |-
+                      Hii from harness ci-cd
+                      please ignore it , i am testing it through your email id and i can see this body message on your mail id
                   timeout: 10m
           environment:
             environmentRef: dev
