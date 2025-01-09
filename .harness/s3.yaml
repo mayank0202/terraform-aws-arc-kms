@@ -1,0 +1,30 @@
+pipeline:
+  name: s3
+  identifier: s3
+  projectIdentifier: poc
+  orgIdentifier: default
+  tags: {}
+  stages:
+    - stage:
+        name: file-upload
+        identifier: fileupload
+        description: ""
+        type: Custom
+        spec:
+          execution:
+            steps:
+              - step:
+                  type: ShellScript
+                  name: ShellScript_1
+                  identifier: ShellScript_1
+                  spec:
+                    shell: Bash
+                    executionTarget: {}
+                    source:
+                      type: Inline
+                      spec:
+                        script: aws s3 ls
+                    environmentVariables: []
+                    outputVariables: []
+                  timeout: 10m
+        tags: {}
