@@ -14,17 +14,16 @@ pipeline:
           execution:
             steps:
               - step:
-                  type: ShellScript
-                  name: ShellScript_1
-                  identifier: ShellScript_1
+                  type: Email
+                  name: Email_1
+                  identifier: Email_1
                   spec:
-                    shell: Bash
-                    executionTarget: {}
-                    source:
-                      type: Inline
-                      spec:
-                        script: aws s3 ls
-                    environmentVariables: []
-                    outputVariables: []
+                    to: mayankat2299@gmail.com
+                    cc: mayank2299@gmail.com
+                    subject: Hello harness
+                    body: Hii from harness ci-cd
                   timeout: 10m
+          environment:
+            environmentRef: dev
+            deployToAll: false
         tags: {}
