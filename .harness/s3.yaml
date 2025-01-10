@@ -14,17 +14,11 @@ pipeline:
           execution:
             steps:
               - step:
-                  type: Email
-                  name: Email_1
-                  identifier: Email_1
-                  spec:
-                    to: mayankat2299@gmail.com
-                    cc: ""
-                    subject: Hello Astha! Stay Alert!
-                    body: |-
-                      Hii from harness ci-cd
-                      please ignore it , i am testing it through your email id and i can see this body message on your mail id
-                  timeout: 10m
+                  type: FilesUpload
+                  name: FilesUpload_1
+                  identifier: FilesUpload_1
+                  spec: {}
+                  timeout: 30m
           environment:
             environmentRef: dev
             deployToAll: false
