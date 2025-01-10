@@ -6,8 +6,8 @@ pipeline:
   tags: {}
   stages:
     - stage:
-        name: file-upload
-        identifier: fileupload
+        name: upload
+        identifier: upload
         description: ""
         type: Custom
         spec:
@@ -21,19 +21,24 @@ pipeline:
                   timeout: 30m
               - step:
                   type: ShellScript
-                  name: s3 push
-                  identifier: s3_push
+                  name: ShellScript_1
+                  identifier: ShellScript_1
                   spec:
                     shell: Bash
                     executionTarget: {}
                     source:
                       type: Inline
                       spec:
-                        script: aws s3 ls
+                        script: |-
+                          curl --location 'https://app.harness.io/gateway/pipeline/api/input-file/download-file?accountIdentifier=ACCOUNT_IDENTIFIER&filePath=FILE_PATH' \
+                          --header 'x-api-key: PAT_TOKEN'
                     environmentVariables: []
                     outputVariables: []
                   timeout: 10m
-          environment:
-            environmentRef: dev
-            deployToAll: false
         tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: git
+        repoName: <+input>
+        build: <+input>
