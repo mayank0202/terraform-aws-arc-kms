@@ -17,9 +17,19 @@ pipeline:
                   type: FilesUpload
                   name: FilesUpload_1
                   identifier: FilesUpload_1
-                  spec: {}
+                  spec:
+                    inputVariables:
+                      - name: fileupload
+                        type: String
+                        value: <+input>
                   timeout: 30m
           environment:
             environmentRef: dev
             deployToAll: false
         tags: {}
+        variables:
+          - name: uploadfile
+            type: String
+            description: ""
+            required: false
+            value: <+input>
