@@ -19,6 +19,20 @@ pipeline:
                   identifier: FilesUpload_1
                   spec: {}
                   timeout: 30m
+              - step:
+                  type: ShellScript
+                  name: s3 push
+                  identifier: s3_push
+                  spec:
+                    shell: Bash
+                    executionTarget: {}
+                    source:
+                      type: Inline
+                      spec:
+                        script: aws s3 ls
+                    environmentVariables: []
+                    outputVariables: []
+                  timeout: 10m
           environment:
             environmentRef: dev
             deployToAll: false
