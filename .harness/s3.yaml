@@ -68,5 +68,6 @@ pipeline:
     ci:
       codebase:
         connectorRef: git
-        repoName: <+input>
+        repoName: terraform-aws-arc-kms
         build: <+input>
+        sparseCheckout: []
