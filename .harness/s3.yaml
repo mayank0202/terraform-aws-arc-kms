@@ -63,7 +63,7 @@ pipeline:
                     connectorRef: account.mayank
                     region: us-east-1
                     bucket: mayank-poc
-                    sourcePath: filesname
+                    sourcePath: filesName
   properties:
     ci:
       codebase:
