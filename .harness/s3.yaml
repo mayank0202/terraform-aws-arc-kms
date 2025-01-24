@@ -25,9 +25,9 @@ pipeline:
                   identifier: ShellScriptProvision_1
                   spec:
                     source:
-                      type: Inline
+                      type: Harness
                       spec:
-                        script: cat fileName
+                        file: /poc
                     environmentVariables: []
                   timeout: 10m
         tags: {}
