@@ -19,6 +19,17 @@ pipeline:
                   identifier: FilesUpload_1
                   spec: {}
                   timeout: 30m
+              - step:
+                  type: ShellScriptProvision
+                  name: ShellScriptProvision_1
+                  identifier: ShellScriptProvision_1
+                  spec:
+                    source:
+                      type: Inline
+                      spec:
+                        script: cat fileName
+                    environmentVariables: []
+                  timeout: 10m
         tags: {}
     - stage:
         name: s3
