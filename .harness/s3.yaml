@@ -6,32 +6,6 @@ pipeline:
   tags: {}
   stages:
     - stage:
-        name: upload
-        identifier: upload
-        description: ""
-        type: Custom
-        spec:
-          execution:
-            steps:
-              - step:
-                  type: FilesUpload
-                  name: FilesUpload_1
-                  identifier: FilesUpload_1
-                  spec: {}
-                  timeout: 30m
-              - step:
-                  type: ShellScriptProvision
-                  name: ShellScriptProvision_1
-                  identifier: ShellScriptProvision_1
-                  spec:
-                    source:
-                      type: Harness
-                      spec:
-                        file: /poc
-                    environmentVariables: []
-                  timeout: 10m
-        tags: {}
-    - stage:
         name: s3
         identifier: s3
         description: ""
@@ -52,7 +26,7 @@ pipeline:
             steps:
               - step:
                   type: S3Upload
-                  name: S3Upload_1
+                  name: file-upload
                   identifier: S3Upload_1
                   spec:
                     connectorRef: account.mayank
